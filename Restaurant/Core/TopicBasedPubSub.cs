@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Restaurant.Events;
 
 namespace Restaurant.Core
@@ -11,6 +12,28 @@ namespace Restaurant.Core
         private readonly object lockObj = new object();
 
         public void Publish<T>(string topic, T message) where T: Message
+        {
+            PublishTopic(topic, message);
+            PublishCorrelationId(message.CorrelationId, message);
+        }
+
+        public void Publish<T>(T message) where T : Message
+        {
+            Publish(typeof(T).Name, message);
+        }
+
+        private void PublishCorrelationId(Guid correlationId, Message message)
+        {
+            if (_subscribers.ContainsKey(message.CorrelationId.ToString()))
+            {
+                foreach (var sub in _subscribers[correlationId.ToString()])
+                {
+                    sub.Handle(message);
+                }
+            }
+        }
+
+        private void PublishTopic<T>(string topic, T message) where T : Message
         {
             if (_subscribers.ContainsKey(topic))
             {
@@ -47,9 +70,19 @@ namespace Restaurant.Core
             Subscribe(typeof(T).Name, handler);
         }
 
-        public void Publish<T>(T message) where T : Message
+        public void Subscribe<T>(Guid correlationId, IHandler<T> handler) where T : Message
         {
-            Publish(typeof(T).Name, message);
+            Subscribe(correlationId.ToString(), handler);
+        }
+
+        public void Unsubscribe(string topic)
+        {
+            _subscribers.Remove(topic);
+        }
+
+        public void Unsubscribe(Guid correlationId)
+        {
+            Unsubscribe(correlationId.ToString());
         }
     }
 
@@ -61,6 +94,12 @@ namespace Restaurant.Core
 
         void Subscribe<T>(string topic, IHandler<T> handler) where T : Message;
 
+        void Subscribe<T>(Guid correlationId, IHandler<T> handler) where T : Message;
+
         void Subscribe<T>(IHandler<T> handler) where T : Message;
+
+        void Unsubscribe(string topic);
+
+        void Unsubscribe(Guid correlationId);
     }
 }

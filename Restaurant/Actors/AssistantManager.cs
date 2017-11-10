@@ -1,10 +1,11 @@
 using System;
+using Restaurant.Commands;
 using Restaurant.Core;
 using Restaurant.Events;
 
 namespace Restaurant.Actors
 {
-    public class AssistantManager : IHandler<FoodCooked>
+    public class AssistantManager : IHandler<PriceOrder>
     {
         private readonly IBus _bus;
         private static readonly Random Random = new Random(1);
@@ -15,14 +16,14 @@ namespace Restaurant.Actors
             _bus = bus;
         }
 
-        public void Handle(FoodCooked message)
+        public void Handle(PriceOrder message)
         {
             foreach (var item in message.Order.LineItems)
             {
                 item.Price = Random.Next(MaxPrice);
             }
 
-            _bus.Publish(new OrderPriced(message.Order));
+            _bus.Publish(new OrderPriced(message.Order, message.CorrelationId, message.Id));
         }
     }
 }

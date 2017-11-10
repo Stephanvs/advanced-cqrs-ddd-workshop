@@ -45,18 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\AlarmClock.cs" />
+    <Compile Include="Actors\Midget.cs" />
     <Compile Include="Actors\Waiter.cs" />
     <Compile Include="Actors\AssistantManager.cs" />
     <Compile Include="Actors\Cashier.cs" />
     <Compile Include="Actors\Cook.cs" />
+    <Compile Include="Commands\CookFood.cs" />
+    <Compile Include="Commands\DelayPublish.cs" />
+    <Compile Include="Commands\PayOrder.cs" />
+    <Compile Include="Commands\PriceOrder.cs" />
+    <Compile Include="Commands\PrintOrder.cs" />
+    <Compile Include="Core\ChaosMonkey.cs" />
     <Compile Include="Core\IHandle.cs" />
     <Compile Include="Core\IStartable.cs" />
+    <Compile Include="Events\CookFoodTimedout.cs" />
     <Compile Include="Events\FoodCooked.cs" />
     <Compile Include="Events\Message.cs" />
+    <Compile Include="Events\OrderCompleted.cs" />
     <Compile Include="Events\OrderPaid.cs" />
     <Compile Include="Events\OrderPlaced.cs" />
     <Compile Include="Events\OrderPriced.cs" />
-    <Compile Include="Events\OrderReady.cs" />
     <Compile Include="Models\LineItem.cs" />
     <Compile Include="Core\MoreFairDispatcher.cs" />
     <Compile Include="Core\Multiplexer.cs" />
@@ -73,5 +82,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

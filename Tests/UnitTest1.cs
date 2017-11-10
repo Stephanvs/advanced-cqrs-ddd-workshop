@@ -1,40 +1,34 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using NUnit.Framework;
 using Restaurant;
+using Restaurant.Actors;
+using Restaurant.Commands;
+using Restaurant.Core;
+using Restaurant.Events;
+using Restaurant.Models;
 
 namespace Tests
 {
-    [TestClass]
-    public class UnitTest1
+    [TestFixture]
+    public class When_the_order_is_placed_then_th
     {
-        //[TestMethod]
-        //public void TestMethod1()
-        //{
-        //    var ord = new OrderDocument("{ 'waiter': 'tom' }");
+        [Test]
+        public void Then_a_cook_food_command_should_be_sent()
+        {
+            var bus = new Mock<IBus>();
+            var midger = new RegularMidget(bus.Object);
+            var orderDocument = new OrderDocument();
+            var correlationId = Guid.NewGuid();
+            var messageId = Guid.NewGuid();
+            midger.Handle(new OrderPlaced(orderDocument, correlationId, Guid.NewGuid(), messageId));
 
-        //    ord.Waiter.Should().Be("tom");
-        //}
-
-        //[TestMethod]
-        //public void TestMethod2()
-        //{
-        //    var str = "{\"waiter\":\"tom\",\"lifetheuniverseandeverything\":42}";
-        //    var ord = new OrderDocument("{ 'waiter': 'tom', 'lifetheuniverseandeverything': 42 }");
-
-        //    var x = ord.Serialize();
-        //    x.Should().Be(str);
-        //}
-
-        //[TestMethod]
-        //public void TestMethod3()
-        //{
-        //    var str = "{\"waiter\":\"tom\",\"lifetheuniverseandeverything\":42}";
-        //    var ord = new OrderDocument("{ 'waiter': 'tom', 'lifetheuniverseandeverything': 42 }");
-        //    ord.AddLineItem(new LineItem { Name = "Salad", Price = 100000, Quantity = 1 });
-
-        //    var x = ord.Serialize();
-        //    x.Should().Be(str);
-        //}
+            bus.Verify(f=> f.Publish(It.Is<CookFood>(c=> c.Order == orderDocument &&
+            c.CorrelationId == correlationId &&
+            c.CausationId == messageId)));
+        }
     }
 }

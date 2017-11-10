@@ -12,6 +12,8 @@ namespace Restaurant.Models
 
         public bool Paid { get; set; }
 
+        public bool IsDodgyCustomer { get; set; }
+
         public List<LineItem> LineItems { get; set; } = new List<LineItem>();
 
         public List<string> Ingredients { get; set; } = new List<string>();

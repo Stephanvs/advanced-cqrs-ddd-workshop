@@ -1,15 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Restaurant.Commands;
 using Restaurant.Core;
 using Restaurant.Events;
+using Restaurant.Models;
 
 namespace Restaurant.Actors
 {
-    public class Cook : IHandler<OrderPlaced>
+    public class Cook : IHandler<CookFood>
     {
         private readonly string _name;
         private readonly int _delayTime;
+        private readonly IDictionary<Guid, OrderDocument> _db;
         private readonly IBus _bus;
 
         private readonly IDictionary<string, IEnumerable<string>> _menu
@@ -19,15 +23,23 @@ namespace Restaurant.Actors
                 ["MacBookPro"] = new[] { "aluminum", "lcd", "plastic" }
             };
 
-        public Cook(string name, int delayTime, IBus bus)
+        public Cook(string name, int delayTime, IDictionary<Guid, OrderDocument> db, IBus bus)
         {
             _name = name;
             _delayTime = delayTime;
+            _db = db;
             _bus = bus;
         }
 
-        public void Handle(OrderPlaced message)
+        public void Handle(CookFood message)
         {
+            if (_db.ContainsKey(message.CorrelationId))
+            {
+                return;
+            }
+
+            _db.Add(message.CorrelationId, message.Order);
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -44,27 +56,7 @@ namespace Restaurant.Actors
                 //order.AddIngredient(string.Join(", ", _menu[item.Name]));
             }
 
-            _bus.Publish(new FoodCooked(message.Order));
+            _bus.Publish(new FoodCooked(message.Order, message.CorrelationId, message.Id));
         }
-
-        //public void Handle(Order order)
-        //{
-        //    var stopwatch = new Stopwatch();
-        //    stopwatch.Start();
-
-        //    Thread.Sleep(1000);
-
-        //    order.CookingMinutes = stopwatch.Elapsed.TotalSeconds;
-        //    order.CookName = _name;
-
-        //    stopwatch.Stop();
-
-        //    foreach (var item in order.LineItems)
-        //    {
-        //        order.AddIngredient(string.Join(", ", _menu[item.Name]));
-        //    }
-
-        //    _orderHandler.Handle(order);
-        //}
     }
 }

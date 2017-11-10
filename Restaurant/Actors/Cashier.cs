@@ -2,46 +2,47 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Restaurant.Commands;
 using Restaurant.Core;
 using Restaurant.Events;
 using Restaurant.Models;
 
 namespace Restaurant.Actors
 {
-    public class Cashier : IHandler<OrderPriced>
+    public class Cashier : IHandler<PayOrder>
     {
-        private readonly IHandler<OrderPaid> _orderHandler;
-        private readonly ConcurrentDictionary<Guid, OrderDocument> _orders = new ConcurrentDictionary<Guid, OrderDocument>();
+        private readonly IBus _bus;
+        private readonly ConcurrentDictionary<Guid, Message> _messages = new ConcurrentDictionary<Guid, Message>();
 
-        public Cashier(IHandler<OrderPaid> orderHandler)
+        public Cashier(IBus bus)
         {
-            _orderHandler = orderHandler;
+            _bus = bus;
         }
 
-        public void Handle(OrderPriced message)
+        public void Handle(PayOrder message)
         {
-            _orders.TryAdd(message.Order.OrderNumber, message.Order);
+            _messages.TryAdd(message.Order.OrderNumber, message);
         }
 
         public void Pay(Guid orderId)
         {
-            if (!_orders.ContainsKey(orderId))
+            if (!_messages.ContainsKey(orderId))
             {
                 return;
             }
 
-            var order = _orders[orderId];
+            var message = _messages[orderId];
 
-            order.Paid = true;
+            message.Order.Paid = true;
 
-            _orderHandler.Handle(new OrderPaid(order));
+            _bus.Publish(new OrderPaid(message.Order, message.CorrelationId, message.Id));
         }
 
         public IEnumerable<OrderDocument> GetOutstandingOrders()
         {
-            return _orders
-                .Where(o => !o.Value.Paid)
-                .Select(o => o.Value);
+            return _messages
+                .Where(o => !o.Value.Order.Paid)
+                .Select(o => o.Value.Order);
         }
     }
 }

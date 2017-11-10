@@ -1,12 +1,13 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using Restaurant.Commands;
 using Restaurant.Events;
 
 namespace Restaurant.Core
 {
-    public class OrderPrinter : IHandler<OrderPaid>
+    public class OrderPrinter : IHandler<PrintOrder>
     {
-        public void Handle(OrderPaid order)
+        public void Handle(PrintOrder order)
         {
             Console.WriteLine(JObject.FromObject(order));
         }

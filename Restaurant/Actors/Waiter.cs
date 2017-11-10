@@ -9,6 +9,7 @@ namespace Restaurant.Actors
     {
         private readonly string _name;
         private readonly IBus _bus;
+        private static readonly Random Random = new Random();
 
         public Waiter(string name, IBus bus)
         {
@@ -26,7 +27,9 @@ namespace Restaurant.Actors
             //order.AddLineItem(item);
             order.LineItems.Add(item);
 
-            _bus.Publish(new OrderPlaced(order));
+            order.IsDodgyCustomer = DateTime.UtcNow.Ticks % 2 == 0;
+
+            _bus.Publish(new OrderPlaced(order, Guid.NewGuid(), Guid.Empty));
         }
     }
 }
