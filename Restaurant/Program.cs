@@ -56,7 +56,7 @@ namespace Restaurant
             Task.Run(() => GetOutstandingOrdersAndPay(cashier));
 
             Task.Run(() => StartMonitoringQueueDepthsAsync(startables));
-            StartMonitoringMidgetHouseAsync(house).Wait();
+            StartMonitoringMinionHouseAsync(house).Wait();
         }
 
         private static async Task StartMonitoringQueueDepthsAsync(IList<IStartable> queues)
@@ -72,12 +72,12 @@ namespace Restaurant
             }
         }
 
-        private static async Task StartMonitoringMidgetHouseAsync(MinionHouse midgetHouse)
+        private static async Task StartMonitoringMinionHouseAsync(MinionHouse minionHouse)
         {
             while (true)
             {
              
-                Console.WriteLine($"[Stats] midgethouse: {midgetHouse.Count()}");
+                Console.WriteLine($"[Stats] MinionHouse: {minionHouse.Count()}");
              
                 await Task.Delay(600).ConfigureAwait(false);
             }
