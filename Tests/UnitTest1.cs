@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
-using Restaurant;
 using Restaurant.Actors;
 using Restaurant.Commands;
 using Restaurant.Core;
@@ -20,7 +16,7 @@ namespace Tests
         public void Then_a_cook_food_command_should_be_sent()
         {
             var bus = new Mock<IBus>();
-            var midger = new RegularMidget(bus.Object);
+            var midger = new RegularMinion(bus.Object);
             var orderDocument = new OrderDocument();
             var correlationId = Guid.NewGuid();
             var messageId = Guid.NewGuid();

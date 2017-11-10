@@ -33,7 +33,7 @@ namespace Restaurant
             var startables = new List<IStartable> {assitantManager, jesse, walt, gus, dispatcher, alarmClock };
             var waiter = new Waiter("Heisenberg", bus);
 
-            var house = new MidgetHouse(bus);
+            var house = new MinionHouse(bus);
 
             bus.Subscribe(chaosMonkey);
             bus.Subscribe(assitantManager);
@@ -72,7 +72,7 @@ namespace Restaurant
             }
         }
 
-        private static async Task StartMonitoringMidgetHouseAsync(MidgetHouse midgetHouse)
+        private static async Task StartMonitoringMidgetHouseAsync(MinionHouse midgetHouse)
         {
             while (true)
             {

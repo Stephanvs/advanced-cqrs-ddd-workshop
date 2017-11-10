@@ -46,7 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actors\AlarmClock.cs" />
-    <Compile Include="Actors\Midget.cs" />
+    <Compile Include="Actors\IMinion.cs" />
+    <Compile Include="Actors\DodgyMinion.cs" />
+    <Compile Include="Actors\MinionFactory.cs" />
+    <Compile Include="Actors\MinionHouse.cs" />
+    <Compile Include="Actors\RegularMinion.cs" />
     <Compile Include="Actors\Waiter.cs" />
     <Compile Include="Actors\AssistantManager.cs" />
     <Compile Include="Actors\Cashier.cs" />

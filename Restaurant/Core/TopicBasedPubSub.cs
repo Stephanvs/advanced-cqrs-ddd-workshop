@@ -9,7 +9,7 @@ namespace Restaurant.Core
         private readonly IDictionary<string, IEnumerable<dynamic>> _subscribers
             = new Dictionary<string, IEnumerable<dynamic>>();
 
-        private readonly object lockObj = new object();
+        private readonly object _lockObj = new object();
 
         public void Publish<T>(string topic, T message) where T: Message
         {
@@ -47,7 +47,7 @@ namespace Restaurant.Core
         public void Subscribe<T>(string topic, IHandler<T> handler) where T : Message
         {
             // To be lock-free in Publish, copy the entire list of subscribers for a key, and replace the instance with a new one.
-            lock (lockObj)
+            lock (_lockObj)
             {
                 if (_subscribers.ContainsKey(topic))
                 {
