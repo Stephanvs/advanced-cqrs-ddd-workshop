@@ -1,6 +1,5 @@
 ﻿using System;
 using Restaurant.Events;
-using Restaurant.Models;
 
 namespace Restaurant.Commands
 {

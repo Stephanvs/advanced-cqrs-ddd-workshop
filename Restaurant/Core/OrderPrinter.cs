@@ -1,7 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using Restaurant.Commands;
-using Restaurant.Events;
 
 namespace Restaurant.Core
 {
