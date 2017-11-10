@@ -16,3 +16,4 @@ Conceptually you can think of each of these 4 actors as being implemented as a m
 - Process Manager(s)
 - Chaos (Seemingly random dropping messages vs. delivering messages twice)
 - Idempotent message handling
+- Weak schema between services (don't lose message elements when serializing/deserializing)
