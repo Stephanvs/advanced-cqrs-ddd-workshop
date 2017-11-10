@@ -18,3 +18,4 @@ Conceptually you can think of each of these 4 actors as being implemented as a m
 - Idempotent message handling
 - Sending messages to future self
 - Weak schema between services (don't lose message elements when serializing/deserializing)
+- Using CorrelationId and CausationId on messages
